@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
+    minWidth: 200,
   },
   bullet: {
     display: 'inline-block',
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     fontSize: 14,
   },
   pos: {
-    marginBottom: 12,
+    marginBottom: 5,
   },
 });
 
@@ -30,19 +30,20 @@ function ActivityCard({activity}) {
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Word of the Day
-        </Typography>
         <Typography variant="h5" component="h2" color="primary">
           {activity.name}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          adjective
+          From {activity.startDate} 
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          Till {activity.endDate} 
         </Typography>
         <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
+          {activity.description}
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          Qouta of {activity.qouta} 
         </Typography>
       </CardContent>
       <CardActions>

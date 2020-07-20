@@ -7,6 +7,10 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,9 +23,17 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  btn: {
+    marginLeft: theme.spacing(3)
+  },
+  search:{
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    color: grey
+  }
 }));
 
-function Navbar() {
+function Navbar(props) {
   const classes = useStyles();
 
   return (
@@ -34,7 +46,17 @@ function Navbar() {
           <Typography variant="h6" className={classes.title}>
             Home
           </Typography>
-          <Button variant="outlined" color="inherit" endIcon={<AddIcon/>}>Add Activity</Button>
+          <TextField className={classes.search} color="inherit"  label="Search activity" variant="standard" 
+          onChange = {(e)=>props.searchFunc(e.target.value)}
+          InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }} />
+          <div className={classes.title}/>
+          <Button className={classes.btn} variant="outlined" color="inherit" endIcon={<AddIcon/>}>Add Activity</Button>
         </Toolbar>
       </AppBar>
     </div>
