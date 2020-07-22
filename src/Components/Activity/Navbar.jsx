@@ -3,13 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import NewActivityPopup from './NewActivityPopup'
 import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +45,7 @@ function Navbar(props) {
           <Typography variant="h6" className={classes.title}>
             Home
           </Typography>
-          <TextField className={classes.search} color="inherit"  label="Search activity" variant="standard" 
+          <TextField className={classes.search} color="secondary"  label="Search activity" variant="standard" 
           onChange = {(e)=>props.searchFunc(e.target.value)}
           InputProps={{
           startAdornment: (
@@ -56,7 +55,7 @@ function Navbar(props) {
           ),
         }} />
           <div className={classes.title}/>
-          <Button className={classes.btn} variant="outlined" color="inherit" endIcon={<AddIcon/>}>Add Activity</Button>
+          <NewActivityPopup  addFunction={this.addEvent}/>
         </Toolbar>
       </AppBar>
     </div>

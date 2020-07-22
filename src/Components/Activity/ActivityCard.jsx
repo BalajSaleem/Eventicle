@@ -5,27 +5,27 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import {red } from '@material-ui/core/colors';
+
+import UpdateActivityPopup from './UpdateActivityPopup';
+import MapPopup from './MapPopup';
+
+
+
+const redTheme = createMuiTheme({ palette: { primary: {main: red[500]} } })
 
 const useStyles = makeStyles({
   root: {
     minWidth: 200,
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
   title: {
     fontSize: 14,
   },
-  pos: {
-    marginBottom: 5,
-  },
 });
 
-function ActivityCard({activity}) {
+function ActivityCard({removeFunction, activity}) {
   const classes = useStyles();
-  //const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <Card className={classes.root}>
@@ -42,12 +42,19 @@ function ActivityCard({activity}) {
         <Typography variant="body2" component="p">
           {activity.description}
         </Typography>
-        <Typography className={classes.pos} color="textSecondary">
+        <Typography variant="subtitle2" color="textSecondary">
           Qouta of {activity.qouta} 
+        </Typography>
+        <Typography variant="overline" color="textSecondary">
+          {activity.address} 
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <MapPopup activity={activity}/>
+        <UpdateActivityPopup activityDetails={activity}/>
+        <MuiThemeProvider theme={redTheme}>
+        <Button size="small" color="primary" onClick={() => removeFunction(activity.id)}>Delete</Button>
+        </MuiThemeProvider>
       </CardActions>
     </Card>
   );

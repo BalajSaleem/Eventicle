@@ -6,19 +6,20 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     item: {
-        //margin: theme.spacing(1)
   },
 }));
 
 
-function Content({ query, activities }) {
+function Content({ removeFunction, query, activities }) {
     const classes = useStyles();
     let filteredActivities = activities.filter((activity) => {
-        return activity.name.indexOf(query) !== -1;
+        return (activity.name.toLowerCase().indexOf(query.toLowerCase()) !== -1) //filter based on name
+        || (activity.startDate.toLowerCase().indexOf(query.toLowerCase()) !== -1)//filter based on start date
+        || (activity.endDate.toLowerCase().indexOf(query.toLowerCase()) !== -1);//filter based on endDate
     });
     const activityList = filteredActivities.map( activity => 
     <Grid key={activity.id} item xs={4} className={classes.item}>
-        <ActivityCard activity={activity} />
+        <ActivityCard removeFunction = {removeFunction} activity={activity} />
     </Grid> ); //Then map these to the cards  
     return (
         <Grid item container spacing={2} alignItems="center" justify="center">
