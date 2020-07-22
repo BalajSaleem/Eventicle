@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
+import format from 'date-fns/format'
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -36,7 +37,7 @@ export default function FormDialog({addFunction}) {
     const [description, setDescription] = React.useState("");
     const [qouta, setQouta] = React.useState(0);
     const [address, setAddress] = React.useState("");
-    const [location, setLocation] = React.useState(""); //get from the map.
+    const [location, setLocation] = React.useState({ lat: 39.907467, lng: 32.802582 }); //this is the initial location.
 
     const classes = useStyles();
     const handleClickOpen = () => {
@@ -47,17 +48,38 @@ export default function FormDialog({addFunction}) {
         setOpen(false);
     };
 
-    const handleCreate = (newActivity) => {
+    const handleCreate = () => {
+        console.log("creating new activity")
+        console.log( format(startDate, 'dd/MM/yyyy') )
+        console.log( format(endDate, 'dd/MM/yyyy') )
+        let newActivity = {
+            id: 6,
+            name: name,
+            description: description,
+            startDate: format(startDate, 'dd/MM/yyyy'),
+            endDate: format(endDate, 'dd/MM/yyyy'),
+            qouta: qouta,
+            address: address,
+            location: location,
+        }
+        console.log(newActivity)
         addFunction(newActivity)
+        setOpen(false);
     };
 
     const handleDateChange = (date) => {
         setStartDate(date);
     };
 
+
+    const handleLocation = (lat, lng) => {
+        setLocation({lat: lat, lng: lng}) 
+    };
+
     const handleEndDateChange = (date) => {
         setEndDate(date);
     };
+
     return (
         <div>
             <Button className={classes.btn} variant="outlined" onClick={handleClickOpen} color="inherit" endIcon={<AddIcon />}>
@@ -74,7 +96,7 @@ export default function FormDialog({addFunction}) {
                         margin="dense"
                         id="name"
                         label="Activity Name"
-                        type="email"
+                        onChange={(e) => { setName(e.target.value) }}
                         fullWidth
                     />
                     <TextField
@@ -82,7 +104,7 @@ export default function FormDialog({addFunction}) {
                         margin="dense"
                         id="name"
                         label="Activity Description"
-                        type="email"
+                        onChange={(e) => { setDescription(e.target.value) }}
                         fullWidth
                     />
                     <TextField
@@ -91,6 +113,7 @@ export default function FormDialog({addFunction}) {
                         id="name"
                         label="Qouta"
                         type="number"
+                        onChange={(e) => { setQouta(e.target.value) }}
                         fullWidth
                     />
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -133,6 +156,7 @@ export default function FormDialog({addFunction}) {
                         id="name"
                         label="Address (in words)"
                         type="text"
+                        onChange={(e) => { setAddress(e.target.value) }}
                         fullWidth
                     />
                     <div>
@@ -140,7 +164,7 @@ export default function FormDialog({addFunction}) {
                             Select location by dragging the marker.
                     </Typography>
                     </div>
-                    <Map />
+                    <Map handleLocation={handleLocation}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

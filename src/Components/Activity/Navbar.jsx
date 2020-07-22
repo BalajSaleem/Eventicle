@@ -55,7 +55,7 @@ function Navbar(props) {
           ),
         }} />
           <div className={classes.title}/>
-          <NewActivityPopup  addFunction={this.addEvent}/>
+          <NewActivityPopup  addFunction={props.addFunction}/>
         </Toolbar>
       </AppBar>
     </div>

@@ -16,6 +16,9 @@ export class MapContainer extends Component {
     const lat = latLng.lat();
     const lng = latLng.lng();
     console.log(lat + " " + lng)
+    //Pass these back
+    this.props.handleLocation(lat, lng);
+
     this.setState({
       eventLocation:  {lat, lng}
     })
@@ -35,7 +38,7 @@ export class MapContainer extends Component {
 
 
   render() {
-    return (
+    return (                           //add on click{setMarker} to place marker on click
       <Map google={this.props.google} zoom={18} initialCenter={this.state.eventLocation}  >
         <Marker
           title="Location"

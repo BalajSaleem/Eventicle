@@ -65,8 +65,9 @@ class Home extends Component {
 
     addEvent(createdEvent){
         this.setState({
-            activities: this.state.activities.push(createdEvent)
+            activities: [...this.state.activities, createdEvent]
         })
+        console.log("new activity has been created")
 
     }
 
