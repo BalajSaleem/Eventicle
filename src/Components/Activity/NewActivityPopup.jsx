@@ -52,19 +52,24 @@ export default function FormDialog({addFunction}) {
         console.log("creating new activity")
         console.log( format(startDate, 'dd/MM/yyyy') )
         console.log( format(endDate, 'dd/MM/yyyy') )
-        let newActivity = {
-            id: 6,
-            name: name,
-            description: description,
-            startDate: format(startDate, 'dd/MM/yyyy'),
-            endDate: format(endDate, 'dd/MM/yyyy'),
-            qouta: qouta,
-            address: address,
-            location: location,
+        if(name.length > 1 && address.length > 1 && description.length > 1 && qouta > 0){
+            let newActivity = {
+                id: 6,
+                name: name,
+                description: description,
+                startDate: format(startDate, 'dd/MM/yyyy'),
+                endDate: format(endDate, 'dd/MM/yyyy'),
+                qouta: qouta,
+                address: address,
+                location: location,
+            }
+            console.log(newActivity)
+            addFunction(newActivity)
+            setOpen(false);
         }
-        console.log(newActivity)
-        addFunction(newActivity)
-        setOpen(false);
+        else
+            alert("please enter valid details for the new activity")
+
     };
 
     const handleDateChange = (date) => {
@@ -93,6 +98,7 @@ export default function FormDialog({addFunction}) {
           </DialogContentText>
                     <TextField
                         autoFocus
+                        required
                         margin="dense"
                         id="name"
                         label="Activity Name"
@@ -101,6 +107,7 @@ export default function FormDialog({addFunction}) {
                     />
                     <TextField
                         autoFocus
+                        required
                         margin="dense"
                         id="name"
                         label="Activity Description"
@@ -109,6 +116,7 @@ export default function FormDialog({addFunction}) {
                     />
                     <TextField
                         autoFocus
+                        required
                         margin="dense"
                         id="name"
                         label="Qouta"
@@ -152,6 +160,7 @@ export default function FormDialog({addFunction}) {
                     </MuiPickersUtilsProvider>
                     <TextField
                         autoFocus
+                        required
                         margin="dense"
                         id="name"
                         label="Address (in words)"
@@ -167,10 +176,10 @@ export default function FormDialog({addFunction}) {
                     <Map handleLocation={handleLocation}/>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button variant="contained" onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleCreate} color="primary">
+                    <Button variant="contained" onClick={handleCreate} color="primary">
                         Create
                     </Button>
                 </DialogActions>

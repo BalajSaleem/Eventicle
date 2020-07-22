@@ -10,6 +10,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import parse from "date-fns/parse";
+import format from 'date-fns/format'
+
 
 import {
     MuiPickersUtilsProvider,
@@ -21,11 +23,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FormDialog({activityDetails}) {
+export default function FormDialog({updateFunction, activityDetails}) {
     const [open, setOpen] = React.useState(false);
     const [startDate, setStartDate] = React.useState(parse(activityDetails.startDate, 'dd/MM/yyyy', new Date()));
     const [endDate, setEndDate] = React.useState(parse(activityDetails.endDate, 'dd/MM/yyyy', new Date()));
     const classes = useStyles();
+
+    let updatedEvent = activityDetails;
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -33,12 +38,10 @@ export default function FormDialog({activityDetails}) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const handleDateChange = (date) => {
-        setStartDate(date);
-    };
-    const handleEndDateChange = (date) => {
-        setEndDate(date);
+    const handleUpdate = () => {
+        console.log("updating event")
+        updateFunction(updatedEvent)
+        setOpen(false);
     };
     return (
         <div>
@@ -57,6 +60,7 @@ export default function FormDialog({activityDetails}) {
                         id="name"
                         label="Activity Name"
                         defaultValue={activityDetails.name}
+                        onChange={(e) => {updatedEvent.name = e.target.value}}
                         fullWidth
                     />
                     <TextField
@@ -65,6 +69,7 @@ export default function FormDialog({activityDetails}) {
                         id="name"
                         label="Activity Description"
                         defaultValue={activityDetails.description}
+                        onChange={(e) => {updatedEvent.description = e.target.value}}
                         fullWidth
                     />
                     <TextField
@@ -87,7 +92,7 @@ export default function FormDialog({activityDetails}) {
                                     id="date-picker-inline"
                                     label="StartDate"
                                     value={startDate}
-                                    onChange={handleDateChange}
+                                    onChange={(e) => {updatedEvent.startDate = format(e, 'dd/MM/yyyy'); setStartDate(e)}}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}
@@ -102,7 +107,7 @@ export default function FormDialog({activityDetails}) {
                                     id="date-picker-inline"
                                     label="End Date"
                                     value={endDate}
-                                    onChange={handleEndDateChange}
+                                    onChange={(e) => {updatedEvent.endDate = format(e, 'dd/MM/yyyy'); setEndDate(e)}}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}
@@ -116,6 +121,7 @@ export default function FormDialog({activityDetails}) {
                         id="name"
                         label="Address (in words)"
                         type="text"
+                        onChange={(e) => {updatedEvent.address = e.target.value}}
                         defaultValue={activityDetails.address}
                         fullWidth
                     />
@@ -124,7 +130,7 @@ export default function FormDialog({activityDetails}) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleUpdate} color="primary">
                         Update
                     </Button>
                 </DialogActions>

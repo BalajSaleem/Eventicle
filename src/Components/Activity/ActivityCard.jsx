@@ -24,11 +24,11 @@ const useStyles = makeStyles({
   },
 });
 
-function ActivityCard({removeFunction, activity}) {
+function ActivityCard({updateFunction, removeFunction, activity}) {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card raised className={classes.root}>
       <CardContent>
         <Typography variant="h5" component="h2" color="primary">
           {activity.name}
@@ -51,7 +51,7 @@ function ActivityCard({removeFunction, activity}) {
       </CardContent>
       <CardActions>
         <MapPopup activity={activity}/>
-        <UpdateActivityPopup activityDetails={activity}/>
+        <UpdateActivityPopup updateFunction={updateFunction} activityDetails={activity}/>
         <MuiThemeProvider theme={redTheme}>
         <Button size="small" color="primary" onClick={() => removeFunction(activity.id)}>Delete</Button>
         </MuiThemeProvider>

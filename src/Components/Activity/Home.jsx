@@ -12,6 +12,8 @@ class Home extends Component {
         this.getSearch = this.getSearch.bind(this);
         this.removeEvent = this.removeEvent.bind(this);
         this.addEvent = this.addEvent.bind(this);
+        this.updateEvent = this.updateEvent.bind(this);
+
         this.state = {
             search: "",
             activities: [
@@ -59,8 +61,7 @@ class Home extends Component {
             activities: this.state.activities.filter((activity) => {
                 return (activity.id !== eventId)
             })
-        }
-        )
+        })
     }
 
     addEvent(createdEvent){
@@ -68,8 +69,17 @@ class Home extends Component {
             activities: [...this.state.activities, createdEvent]
         })
         console.log("new activity has been created")
-
     }
+
+    updateEvent(updatedEvent){
+        this.setState({
+            activities: this.state.activities.filter((activity) => {
+                return (activity.id !== updatedEvent.id) ? activity : updatedEvent
+            })
+        })
+        console.log(`updated event`)
+    }
+    
 
 
     render() {
@@ -83,7 +93,7 @@ class Home extends Component {
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
                         <Box m={2} />
-                        <Content removeFunction={this.removeEvent} query={this.state.search} activities={this.state.activities} />
+                        <Content updateFunction={this.updateEvent} removeFunction={this.removeEvent} query={this.state.search} activities={this.state.activities} />
                     </Grid>
                     <Grid item xs={2}></Grid>
                 </Grid>

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Content({ removeFunction, query, activities }) {
+function Content({ updateFunction, removeFunction, query, activities }) {
     const classes = useStyles();
     let filteredActivities = activities.filter((activity) => {
         return (activity.name.toLowerCase().indexOf(query.toLowerCase()) !== -1) //filter based on name
@@ -19,7 +19,7 @@ function Content({ removeFunction, query, activities }) {
     });
     const activityList = filteredActivities.map( activity => 
     <Grid key={activity.id} item xs={4} className={classes.item}>
-        <ActivityCard removeFunction = {removeFunction} activity={activity} />
+        <ActivityCard updateFunction = {updateFunction} removeFunction = {removeFunction} activity={activity} />
     </Grid> ); //Then map these to the cards  
     return (
         <Grid item container spacing={2} alignItems="center" justify="center">
