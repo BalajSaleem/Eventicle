@@ -27,6 +27,7 @@ public class PersonController {
         return personRepository.findAll();
     }
 
+    //get the events person in participating in
     @GetMapping("/personEvents/{id}")
     public List<Event> getPersonEvents(@PathVariable(value = "id") Long personId)  throws ResourceNotFoundException{
         Person person = personRepository.findById(personId).orElseThrow(
@@ -42,12 +43,13 @@ public class PersonController {
                 () -> new ResourceNotFoundException("person " + personId + " not found") );
         return ResponseEntity.ok().body(person);
     }
-    //savePerson
 
+    //savePerson
     @PostMapping("persons")
     public Person createPerson(@RequestBody Person person){
         return  this.personRepository.save(person);
     }
+
     //updatePerson
     @PutMapping("persons/{id}")
     public ResponseEntity<Person> updatePerson(@PathVariable(value = "id") Long personId, @NotNull @RequestBody
@@ -57,11 +59,10 @@ public class PersonController {
 
         person.setEmail(personDetails.getEmail());
         person.setName(personDetails.getName());
-        person.setCorporation(personDetails.getCorporation());
         person.setSurname(personDetails.getSurname());
-
         return ResponseEntity.ok(this.personRepository.save(person));
     }
+
 
     //deletePerson
     @DeleteMapping("persons/{id}")

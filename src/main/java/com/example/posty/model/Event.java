@@ -1,10 +1,14 @@
 package com.example.posty.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "events")
@@ -19,35 +23,42 @@ public class Event {
     private Integer quota;
 
     //Date Related
-    private LocalDate createDate;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String createDate;
+    private String startDate;
+    private String endDate;
 
     //Location Related
-    private Integer latitude;
-    private Integer longitude;
+    private Double lat;
+    private Double lng;
     private String address;
 
+    //event belonging to the officer
     @ManyToOne
-    @JoinColumn(name = "person_id")
-    @JsonBackReference
-    private Person maker;
+    @JoinColumn(name = "officer_id")
+    private Officer maker;
 
-    //Boilerplate code
+    //participants on this event
+    @ManyToMany(cascade = CascadeType.REMOVE, mappedBy = "events")
+    private List<Person> participants = new ArrayList<>();
+
+    //Boilerplate code : should have used lombok
+
+
 
     public Event() {
     }
 
-    public Event(String title, String description, Integer quota, LocalDate createDate, LocalDate startDate, LocalDate endDate,
-                 Integer latitude, Integer longitude, String address){
+
+    public Event(String title, String description, Integer quota, String createDate, String startDate, String endDate,
+                 Double latitude, Double longitude, String address){
         this.title = title;
         this.description = description;
         this.quota = quota;
         this.createDate = createDate;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.lat = latitude;
+        this.lng = longitude;
         this.address = address;
     }
 
@@ -75,52 +86,52 @@ public class Event {
         this.description = description;
     }
 
-    public Person getMaker() {
+    public Officer getMaker() {
         return maker;
     }
 
-    public void setMaker(Person maker) {
+    public void setMaker(Officer maker) {
         this.maker = maker;
     }
 
-    public LocalDate getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public Integer getLatitude() {
-        return latitude;
+    public Double getLat() {
+        return lat;
     }
 
-    public void setLatitude(Integer latitude) {
-        this.latitude = latitude;
+    public void setLat(Double latitude) {
+        this.lat = latitude;
     }
 
-    public Integer getLongitude() {
-        return longitude;
+    public Double getLng() {
+        return lng;
     }
 
-    public void setLongitude(Integer longitude) {
-        this.longitude = longitude;
+    public void setLng(Double longitude) {
+        this.lng = longitude;
     }
 
     public String getAddress() {
@@ -139,4 +150,25 @@ public class Event {
         this.quota = quota;
     }
 
+    public List<Person> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<Person> participants) {
+        this.participants = participants;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(id, event.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

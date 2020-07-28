@@ -1,10 +1,12 @@
 package com.example.posty.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "persons")
@@ -15,22 +17,29 @@ public class Person {
     private Long id;
     private String name;
     private String surname;
-    private String email;
-    private String corporation;
+    private String password;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "maker")
-    @JsonManagedReference
+    private String email;
+    private String nationalId;
+
+    //events he is going to
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @JoinTable(name = "events_person",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
     private List<Event> events = new ArrayList<>();
 
 
     public Person() {
     }
 
-    public Person(String name, String surname, String email, String corporation) {
+    public Person(String name, String surname, String password, String email, String nationalId) {
         this.name = name;
         this.surname = surname;
+        this.password = password;
         this.email = email;
-        this.corporation = corporation;
+        this.nationalId = nationalId;
     }
 
     public Long getId() {
@@ -65,14 +74,6 @@ public class Person {
         this.email = email;
     }
 
-    public String getCorporation() {
-        return corporation;
-    }
-
-    public void setCorporation(String corporation) {
-        this.corporation = corporation;
-    }
-
     public List<Event> getEvents() {
         return events;
     }
@@ -80,5 +81,37 @@ public class Person {
     public void setEvents(List<Event> events) {
         this.events = events;
     }
+
+    public String getNationalId() {
+        return nationalId;
+    }
+
+    public void setNationalId(String nationalId) {
+        this.nationalId = nationalId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) &&
+                Objects.equals(email, person.email) &&
+                Objects.equals(nationalId, person.nationalId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, nationalId);
+    }
+
 
 }
