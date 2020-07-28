@@ -42,7 +42,7 @@ export default function MapPopup({ activity }) {
                 <MapView activity = {activity} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">Close</Button>
+                    <Button onClick={handleClose} variant="contained" color="primary">Close</Button>
                 </DialogActions>
             </Dialog>
         </div>
