@@ -59,8 +59,8 @@ export default function FormDialog({updateFunction, activityDetails}) {
                         margin="dense"
                         id="name"
                         label="Activity Name"
-                        defaultValue={activityDetails.name}
-                        onChange={(e) => {updatedEvent.name = e.target.value}}
+                        defaultValue={activityDetails.title}
+                        onChange={(e) => {updatedEvent.title = e.target.value}}
                         fullWidth
                     />
                     <TextField
@@ -78,7 +78,7 @@ export default function FormDialog({updateFunction, activityDetails}) {
                         id="name"
                         label="Qouta"
                         type="number"
-                        defaultValue={activityDetails.qouta}
+                        defaultValue={activityDetails.quota}
                         fullWidth
                     />
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>

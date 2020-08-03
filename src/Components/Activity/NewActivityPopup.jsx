@@ -13,11 +13,16 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import format from 'date-fns/format'
+import axios from 'axios'
+
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 
+const api = axios.create({
+    baseURL: 'http://localhost:8080/api/v1/'
+})
 
 const useStyles = makeStyles((theme) => ({
     btn: {
@@ -48,23 +53,24 @@ export default function FormDialog({addFunction}) {
         setOpen(false);
     };
 
-    const handleCreate = () => {
-        console.log("creating new activity")
-        console.log( format(startDate, 'dd/MM/yyyy') )
-        console.log( format(endDate, 'dd/MM/yyyy') )
+    const handleCreate = async () => {
         if(name.length > 1 && address.length > 1 && description.length > 1 && qouta > 0){
             let newActivity = {
-                id: 6,
-                name: name,
+                title: name,
                 description: description,
                 startDate: format(startDate, 'dd/MM/yyyy'),
                 endDate: format(endDate, 'dd/MM/yyyy'),
-                qouta: qouta,
+                quota: qouta,
                 address: address,
-                location: location,
+                lat: location.lat,
+                lng: location.lng,
             }
-            console.log(newActivity)
-            addFunction(newActivity)
+            //THIS IS A DUMMY OFFICER ID, GET THE ACTUAL ID FROM AUTH.
+            let officerId = 1
+            let data = await api.post(`/events/${officerId}`, newActivity).then(({data}) =>{
+                console.log(data)
+                addFunction(data)
+            })
             setOpen(false);
         }
         else

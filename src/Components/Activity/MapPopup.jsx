@@ -33,7 +33,7 @@ export default function MapPopup({ activity }) {
                 Location
             </Button>
             <Dialog classes={{paper: classes.dialogPaper}} fullWidth={true} maxWidth = {'md'} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">{activity.name} Location</DialogTitle>
+                <DialogTitle id="form-dialog-title">{activity.title} Location</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         {activity.address}

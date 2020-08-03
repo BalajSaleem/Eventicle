@@ -14,11 +14,11 @@ function Content({ updateFunction, removeFunction, query, activities }) {
 
     const classes = useStyles();
     let filteredActivities = activities.filter((activity) => {
-        return (activity.name.toLowerCase().indexOf(query.toLowerCase()) !== -1) //filter based on name
+        return (activity.title.toLowerCase().indexOf(query.toLowerCase()) !== -1) //filter based on name
         || (activity.startDate.toLowerCase().indexOf(query.toLowerCase()) !== -1)//filter based on start date
     });
     const activityList = filteredActivities.map( activity => 
-    <Grid key={activity.id} item xs={4} className={classes.item}>
+    <Grid key={activity.id} item xs={12} md={6} className={classes.item}>
         <ActivityCard participants = {activity.participants} updateFunction = {updateFunction} removeFunction = {removeFunction} activity={activity} />
     </Grid> ); //Then map these to the cards  
     return (

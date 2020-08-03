@@ -8,8 +8,8 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 
 const useStyles = makeStyles((theme) => ({
     dialogPaper: {
-        minHeight: '70vh',
-        maxHeight: '70vh',
+        minHeight: '80vh',
+        maxHeight: '80vh',
     },
 }));
 
@@ -27,8 +27,9 @@ export default function MapPopup({ activities }) {
     };
 
     const chart = () =>{
+        console.log("chart rendered")
         setChartData({
-            labels: activities.map((activity) => activity.name),
+            labels: activities.map((activity) => activity.title),
             datasets: [
                 {
                     label: 'Attendance',
@@ -41,7 +42,7 @@ export default function MapPopup({ activities }) {
         })
     }
 
-    React.useEffect(chart, [])
+    React.useEffect(chart, [activities])
     return (
         <div>
             <Button variant="outlined" onClick={handleClickOpen} color="inherit" endIcon={<AssessmentIcon />}>

@@ -32,7 +32,7 @@ function ActivityCard({participants, updateFunction, removeFunction, activity}) 
     <Card raised className={classes.root}>
       <CardContent>
         <Typography variant="h5" component="h2" color="primary">
-          {activity.name}
+          {activity.title}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           From {activity.startDate} 
@@ -44,7 +44,7 @@ function ActivityCard({participants, updateFunction, removeFunction, activity}) 
           {activity.description}
         </Typography>
         <Typography variant="subtitle2" color="textSecondary">
-          Qouta of {activity.qouta} 
+          Qouta of {activity.quota} 
         </Typography>
         <Typography variant="overline" color="textSecondary">
           {activity.address} 
