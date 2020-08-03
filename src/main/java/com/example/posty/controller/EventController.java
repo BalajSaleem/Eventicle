@@ -131,6 +131,8 @@ public class EventController {
     @DeleteMapping("events/{id}")
     public Map<String,Boolean> deleteEvent(@PathVariable(value = "id") Long eventId) throws ResourceNotFoundException{
         Event event = eventRepository.findById(eventId).orElseThrow( () -> new ResourceNotFoundException("event " + eventId + " not found") );
+        event.clearParticipants();
+        eventRepository.save(event);
         this.eventRepository.delete(event);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);

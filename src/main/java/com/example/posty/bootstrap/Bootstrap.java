@@ -44,8 +44,8 @@ public class Bootstrap implements CommandLineRunner {
         sprEvent.setCreateDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         sprEvent.setStartDate(LocalDate.of(2020,9, 1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         sprEvent.setEndDate(LocalDate.of(2020,9, 3).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        sprEvent.setLat(10.00);
-        sprEvent.setLng(20.00);
+        sprEvent.setLat(39.907467);
+        sprEvent.setLng(32.802582);
         sprEvent.setAddress("Avenue Boulevard, California, America");
         sprEvent.setQuota(100);
         sprEvent.setMaker(guru);
@@ -58,8 +58,8 @@ public class Bootstrap implements CommandLineRunner {
         thymEvent.setCreateDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         thymEvent.setStartDate(LocalDate.of(2020,10,10).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         thymEvent.setEndDate(LocalDate.of(2020,10, 12).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        thymEvent.setLat(10.00);
-        thymEvent.setLng(20.00);
+        thymEvent.setLat(39.907467);
+        thymEvent.setLng(32.802582);
         thymEvent.setAddress("Avenue Boulevard, California, America");
         thymEvent.setQuota(50);
         thymEvent.setMaker(guru);
@@ -84,9 +84,9 @@ public class Bootstrap implements CommandLineRunner {
         reactEvent.setCreateDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         reactEvent.setStartDate(LocalDate.of(2020,2, 1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         reactEvent.setEndDate(LocalDate.of(2020,2, 12).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        reactEvent.setLat(33.00);
+        reactEvent.setLat(39.907467);
         reactEvent.setAddress("Avenue Boulevard, California, America");
-        reactEvent.setLng(80.00);
+        reactEvent.setLng(32.802582);
         reactEvent.setQuota(100);
         reactEvent.setMaker(emre);
         eventRepository.save(reactEvent);
@@ -109,6 +109,7 @@ public class Bootstrap implements CommandLineRunner {
         ahmed.setSurname("Erkaya");
         ahmed.setEmail("ahmed@ahmed.com");
         ahmed.setNationalId("01234567891");
+        personRepository.save(ahmed);
         ahmed.getEvents().add(sprEvent);
         ahmed.getEvents().add(thymEvent);
         personRepository.save(ahmed);
@@ -126,6 +127,7 @@ public class Bootstrap implements CommandLineRunner {
         balaj.setSurname("Saleem");
         balaj.setEmail("balaj@balaj.com");
         balaj.setNationalId("01234569999");
+        personRepository.save(balaj);
         balaj.getEvents().add(reactEvent);
         personRepository.save(balaj);
 

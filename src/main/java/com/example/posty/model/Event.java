@@ -38,10 +38,10 @@ public class Event {
     private Officer maker;
 
     //participants on this event
-    @ManyToMany(cascade = CascadeType.REMOVE, mappedBy = "events")
+    @ManyToMany(cascade =CascadeType.REMOVE , mappedBy = "events")
     private List<Person> participants = new ArrayList<>();
 
-    //Boilerplate code : should have used lombok
+    //Boilerplate code below : should have used lombok
 
 
 
@@ -158,6 +158,12 @@ public class Event {
         this.participants = participants;
     }
 
+    public void clearParticipants(){
+        for (Person participant: participants) {
+                    participant.getEvents().remove(this);
+        }
+        participants.clear();
+    }
 
     @Override
     public boolean equals(Object o) {
