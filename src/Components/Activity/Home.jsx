@@ -17,11 +17,9 @@ class Home extends Component {
         //getting the data
         console.log('mounting componenet')
         this.fetchEvents()
-        
     }
 
     fetchEvents = async () => {
-
         //THIS IS A DUMMY OFFICER ID, GET THE ACTUAL ID FROM AUTH.
         let officerId = 1
         try{
@@ -106,7 +104,7 @@ class Home extends Component {
         })
     }
 
-    removeEvent(eventId) {
+    removeEvent = async (eventId) => {
         console.log(`remove the event with id`)
         console.log(eventId)
         //use the delete api call
@@ -115,6 +113,7 @@ class Home extends Component {
                 return (activity.id !== eventId)
             })
         })
+        await api.delete(`/events/${eventId}`).then(alert("Event Succesfully Deleted"))
     }
 
     async addEvent(createdEvent){

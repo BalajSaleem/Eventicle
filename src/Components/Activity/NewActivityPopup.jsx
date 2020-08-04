@@ -67,7 +67,7 @@ export default function FormDialog({addFunction}) {
             }
             //THIS IS A DUMMY OFFICER ID, GET THE ACTUAL ID FROM AUTH.
             let officerId = 1
-            let data = await api.post(`/events/${officerId}`, newActivity).then(({data}) =>{
+            await api.post(`/events/${officerId}`, newActivity).then(({data}) =>{
                 console.log(data)
                 addFunction(data)
             })
