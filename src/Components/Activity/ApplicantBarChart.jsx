@@ -44,8 +44,8 @@ export default function MapPopup({ activities }) {
     React.useEffect(chart, [activities])
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen} color="inherit" endIcon={<AssessmentIcon />}>
-                Applicant Graph
+            <Button variant="outlined" size="small" onClick={handleClickOpen} color="inherit" endIcon={<AssessmentIcon />}>
+                Attendance Graph
             </Button>
             <Dialog classes={{paper: classes.dialogPaper}} fullWidth={true} maxWidth = {'md'} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Activity Attendence Trend</DialogTitle>

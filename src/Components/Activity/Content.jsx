@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Content({ corporation, updateFunction, removeFunction, query, activities }) {
+function Content({applyFunction, corporation, updateFunction, removeFunction, query, activities }) {
 
     const classes = useStyles();
     let activityList = {}
@@ -29,7 +29,7 @@ function Content({ corporation, updateFunction, removeFunction, query, activitie
     else{
         activityList = filteredActivities.map(activity =>
             <Grid key={activity.id} item xs={12} md={6} className={classes.item}>
-                <SimpleActivityCard activity={activity} />
+                <SimpleActivityCard applyFunction={applyFunction} activity={activity} />
             </Grid>); //Then map these to the cards  
     }
 

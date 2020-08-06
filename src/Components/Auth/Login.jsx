@@ -74,7 +74,6 @@ function Login() {
         alert("There was an error logging in")
         console.log(err)
       }
-      alert('Congratulations, you have successfully Logged In')
     }
     else alert('Please recheck your entered details')
   }

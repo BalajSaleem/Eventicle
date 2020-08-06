@@ -24,11 +24,10 @@ class Home extends Component {
         if(user.corporation)
             this.fetchOfficerEvents()
         else
-            this.fetchEvents()
+            this.fetchRemainingEventsNotRegistered()
     }
 
     fetchOfficerEvents = async () => {
-        //THIS IS A DUMMY OFFICER ID, GET THE ACTUAL ID FROM AUTH.
         let officerId = this.props.location.state.data.id
         try{
             let data = await api.get(`/officerEvents/${officerId}`).then(({data}) => data)
@@ -49,9 +48,50 @@ class Home extends Component {
         }
     }
 
+    fetchRemainingEventsNotRegistered = async () => {
+        let personId = this.props.location.state.data.id
+        try{
+            let data = await api.get(`/eventsNotRegisteredRemaining/${personId}`).then(({data}) => data)
+            this.setState({activities: data})
+        }
+        catch(err){
+            console.log(err.message)
+        }
+    }
+
+    applyEvent = async (eventId) => {
+        let personId = this.props.location.state.data.id
+        try{
+            let data = await api.put(`/eventAddPerson/${eventId}/${personId}`)
+            console.log(data)
+            this.setState({
+                activities: this.state.activities.filter((activity) => {
+                    return (activity.id !== eventId)
+                })
+            })
+            alert("Kudos, you have succesfully applied for this event")
+        }
+        catch(err){
+            alert("Can not apply for the event, you might have already applied")
+            console.log(err)
+        }
+        
+    }
+
     fetchEvents = async () => {
         try{
             let data = await api.get(`/events/`).then(({data}) => data)
+            this.setState({activities: data})
+        }
+        catch(err){
+            console.log(err.message)
+        }
+    }
+
+    fetchRegisteredEvents = async () => {
+        let personId = this.props.location.state.data.id
+        try{
+            let data = await api.get(`/personEvents/${personId}`).then(({data}) => data)
             this.setState({activities: data})
         }
         catch(err){
@@ -129,13 +169,15 @@ class Home extends Component {
         return (
             <Grid container direction="column">
                 <Grid item>
-                    <Navbar corporation={this.props.location.state.data.corporation} activities={this.state.activities}  addFunction={this.addEvent}  searchFunc={this.getSearch} />
+                    <Navbar user={this.props.location.state.data} activities={this.state.activities} 
+                    addFunction={this.addEvent}  searchFunc={this.getSearch} fetchAllEvents={this.fetchEvents}
+                    fetchRegisteredEvents={this.fetchRegisteredEvents} fetchRemainingEvents={this.fetchRemainingEventsNotRegistered} />
                 </Grid>
                 <Grid item container>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
                         <Box m={2} />
-                        <Content corporation={this.props.location.state.data.corporation} updateFunction={this.updateEvent} removeFunction={this.removeEvent} query={this.state.search} activities={this.state.activities} />
+                        <Content applyFunction={this.applyEvent} corporation={this.props.location.state.data.corporation} updateFunction={this.updateEvent} removeFunction={this.removeEvent} query={this.state.search} activities={this.state.activities} />
                     </Grid>
                     <Grid item xs={2}></Grid>
                 </Grid>

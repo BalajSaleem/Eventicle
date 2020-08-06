@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FormDialog({addFunction}) {
+export default function FormDialog({user, addFunction}) {
     const [open, setOpen] = React.useState(false);
     const [startDate, setStartDate] = React.useState(new Date());
     const [endDate, setEndDate] = React.useState(new Date());
@@ -66,7 +66,7 @@ export default function FormDialog({addFunction}) {
                 lng: location.lng,
             }
             //THIS IS A DUMMY OFFICER ID, GET THE ACTUAL ID FROM AUTH.
-            let officerId = 1
+            let officerId = user.id
             await api.post(`/events/${officerId}`, newActivity).then(({data}) =>{
                 console.log(data)
                 addFunction(data)
@@ -93,7 +93,7 @@ export default function FormDialog({addFunction}) {
 
     return (
         <div>
-            <Button className={classes.btn} variant="outlined" onClick={handleClickOpen} color="inherit" endIcon={<AddIcon />}>
+            <Button className={classes.btn} variant="outlined" size="small" onClick={handleClickOpen} color="inherit" endIcon={<AddIcon />}>
                 Add Activity
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

@@ -7,8 +7,15 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
 import NewActivityPopup from './NewActivityPopup'
-import ApplicantBarChart from './ApplicantBarChart'
 import { grey } from '@material-ui/core/colors';
+import EventIcon from '@material-ui/icons/Event';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Button from '@material-ui/core/Button';
+import ApplicantBarChart from './ApplicantBarChart'
+import { Grid } from '@material-ui/core';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,15 +23,15 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    borderRadius: 5 
+    borderRadius: 5
   },
   title: {
     flexGrow: 1,
   },
   btn: {
-    marginLeft: theme.spacing(3)
+    marginLeft: theme.spacing(1)
   },
-  search:{
+  search: {
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(1),
     color: grey
@@ -34,7 +41,29 @@ const useStyles = makeStyles((theme) => ({
 function Navbar(props) {
   const classes = useStyles();
 
-  const popup = props.corporation ? <NewActivityPopup addFunction={props.addFunction}/> : <div></div>
+  const popup = props.user.corporation ?
+    <div>
+      <Grid container direction="row">
+        <Grid item className={classes.btn}>
+          <NewActivityPopup user={props.user} addFunction={props.addFunction} />
+        </Grid>
+        <Grid item className={classes.btn}>
+          <ApplicantBarChart activities={props.activities} />
+        </Grid>
+      </Grid>
+    </div>
+    :
+    <div>
+      <Button variant="outlined" size="small" className={classes.btn} onClick={props.fetchAllEvents} color="inherit" endIcon={<DateRangeIcon />}>
+        All Events
+      </Button>
+      <Button variant="outlined" size="small" className={classes.btn} onClick={props.fetchRegisteredEvents} color="inherit" endIcon={<EventAvailableIcon />}>
+        Registered Events
+      </Button>
+      <Button variant="outlined" className={classes.btn} size="small" onClick={props.fetchRemainingEvents} color="inherit" endIcon={<EventIcon />}>
+        Upcomming Events
+      </Button>
+    </div>
 
   return (
     <div className={classes.root}>
@@ -43,19 +72,20 @@ function Navbar(props) {
           <Typography variant="h6" className={classes.title}>
             Home
           </Typography>
-          <TextField className={classes.search} color="secondary"  label="Search activity" variant="standard" 
-          onChange = {(e)=>props.searchFunc(e.target.value)}
-          InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }} />
-          <div className={classes.title}/>
-          <ApplicantBarChart activities={props.activities} />
-          {/* <NewActivityPopup  addFunction={props.addFunction}/> */}
+          <TextField className={classes.search} color="secondary" label="Search activity" variant="standard"
+            onChange={(e) => props.searchFunc(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }} />
+          <div className={classes.title} />
           {popup}
+          <Button  component={Link} to="/" variant="outlined" size="small" className={classes.btn} color="secondary" endIcon={<ExitToAppIcon />}>
+            Logout!
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
