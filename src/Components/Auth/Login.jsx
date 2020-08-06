@@ -12,6 +12,12 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import axios from 'axios'
+import { useHistory } from "react-router-dom";
+
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api/v1/'
+})
 
 function Copyright() {
   return (
@@ -27,7 +33,7 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
+  paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
@@ -47,7 +53,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Login() {
+
+
+
+
+  const [email, setEmail] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
   const classes = useStyles();
+  const history = useHistory();
+
+
+  const handleLogin = async () => {
+    if (email && password && (email.indexOf("@") !== -1)) {
+      try {
+        await api.get(`/persons/${email}/${password}`).then(({ data }) => {
+          history.push("/Home", { data });
+        })
+      }
+      catch (err) {
+        alert("There was an error logging in")
+        console.log(err)
+      }
+      alert('Congratulations, you have successfully Logged In')
+    }
+    else alert('Please recheck your entered details')
+  }
 
   return (
     <Container component="main" maxWidth="xs" >
@@ -69,6 +99,7 @@ function Login() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            onChange={(e) => { setEmail(e.target.value) }}
             autoFocus
           />
           <TextField
@@ -80,6 +111,7 @@ function Login() {
             label="Password"
             type="password"
             id="password"
+            onChange={(e) => { setPassword(e.target.value) }}
             autoComplete="current-password"
           />
           <FormControlLabel
@@ -87,11 +119,11 @@ function Login() {
             label="Remember me"
           />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleLogin}
           >
             Sign In
           </Button>

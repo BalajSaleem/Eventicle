@@ -17,6 +17,7 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Route exact path ='/' component ={Login} />
+        <Route exact path ='/SignIn' component ={Login} />
         <Route path ='/SignUp' component ={() => (<Register organizations={organizations} />)} />
         <Route exact path ='/Home' component ={Home} />
       </ThemeProvider>

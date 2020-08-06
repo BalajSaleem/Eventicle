@@ -14,9 +14,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup'
+import axios from 'axios'
+import { useHistory } from "react-router-dom";
 
 
 
+
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api/v1/'
+})
 
 function Copyright() {
   return (
@@ -51,17 +60,62 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 200,
+    minWidth: 180,
   },
+  toogle: {
+    margin: theme.spacing(1),
+    marginTop: theme.spacing(3),
+    minWidth: 150,
+  }
 
 }));
 
-function Register({organizations}) {
+function Register({ organizations }) {
+  
+  const [isOfficer, setIsOfficer] = React.useState(false);
+  const [name, setName] = React.useState(null);
+  const [surname, setSurname] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const [organization, setOrganization] = React.useState(null);
+  const [nationalId, setNationalId] = React.useState(null);
+
+  const history = useHistory();
+
   const classes = useStyles();
 
   const organizationList = organizations.map(org => {
     return <MenuItem value={org} key={org}>{org}</MenuItem>
   })
+
+  const handleSignUp = async() =>{
+    
+    if(!isOfficer){
+      if(name && surname && email && password  && nationalId && (email.indexOf('@') !== -1) ){
+          console.log("creating a person")
+          let person = {name, surname, password, email, nationalId}
+          await api.post('/persons', person).then(({data}) =>{
+            console.log(data)
+            history.push("/SignIn");
+        })
+        alert('Congratulations, you have successfully signed up! Go ahead and Login')
+      }
+      else alert('error signing up, please recheck the provided details')
+    }
+    else{
+      if(name && surname && email && password && organization && nationalId && (email.indexOf('@') !== -1)){
+          console.log("creating an officer")
+          let person = {name, surname, password, email, nationalId, corporation: organization}
+          await api.post('/officers', person).then(({data}) =>{
+            console.log(data)
+            history.push("/SignIn");
+        })
+        alert('Congratulations, you have successfully signed up! Go ahead and Login')
+      }
+      else alert('error signing up, please recheck the provided details')
+    }
+
+  }
 
   return (
     <Container component="main" maxWidth="xs" >
@@ -74,6 +128,28 @@ function Register({organizations}) {
           Sign Up
         </Typography>
         <form className={classes.form} noValidate>
+        <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Name"
+            name="name"
+            autoFocus
+            onChange = {(e) => {setName(e.target.value)}}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="surname"
+            label="Surname"
+            name="surname"
+            autoFocus
+            onChange = {(e) => {setSurname(e.target.value)}}
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -84,6 +160,7 @@ function Register({organizations}) {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange = {(e) => {setEmail(e.target.value)}}
           />
           <TextField
             variant="outlined"
@@ -95,6 +172,7 @@ function Register({organizations}) {
             name="id"
             autoComplete="id"
             autoFocus
+            onChange = {(e) => {setNationalId(e.target.value)}}
           />
           <TextField
             variant="outlined"
@@ -106,28 +184,42 @@ function Register({organizations}) {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange = {(e) => {setPassword(e.target.value)}}
           />
-          <FormControl  required className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">Organization</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              displayEmpty 
-            >
-              {/* ======get these items from the props====== */}
-              {/* <MenuItem value="TUBITAK">TUBITAK</MenuItem>
-              <MenuItem value="GOOGLE">Google</MenuItem>
-              <MenuItem value="FACEBOOK">Facebook</MenuItem> */}
-              { organizationList }
-            </Select>
-          </FormControl>
+          <FormGroup row>
+
+          <FormControlLabel className={classes.toogle}
+                control={
+                  <Switch
+                    color="primary"
+                    onChange={(e) => {setIsOfficer( e.target.checked )}}
+                  />
+                }
+                label="Officer"
+              />
+
+            <FormControl required className={classes.formControl}>
+              <InputLabel id="demo-simple-select-label">Organization</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                displayEmpty
+                disabled={!isOfficer}
+                onChange={(e) => {setOrganization( e.target.value )}}
+              >
+                {organizationList}
+              </Select>
+
+            </FormControl>
+
+          </FormGroup>
 
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSignUp}
           >
             Sign Up
           </Button>

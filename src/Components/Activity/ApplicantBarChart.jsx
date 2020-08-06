@@ -27,7 +27,6 @@ export default function MapPopup({ activities }) {
     };
 
     const chart = () =>{
-        console.log("chart rendered")
         setChartData({
             labels: activities.map((activity) => activity.title),
             datasets: [

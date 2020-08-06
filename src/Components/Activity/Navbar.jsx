@@ -34,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 function Navbar(props) {
   const classes = useStyles();
 
+  const popup = props.corporation ? <NewActivityPopup addFunction={props.addFunction}/> : <div></div>
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -52,7 +54,8 @@ function Navbar(props) {
         }} />
           <div className={classes.title}/>
           <ApplicantBarChart activities={props.activities} />
-          <NewActivityPopup  addFunction={props.addFunction}/>
+          {/* <NewActivityPopup  addFunction={props.addFunction}/> */}
+          {popup}
         </Toolbar>
       </AppBar>
     </div>
