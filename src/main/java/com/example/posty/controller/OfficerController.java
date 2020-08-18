@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders="*")
 @RequestMapping("/api/v1/")
 public class OfficerController {
 
@@ -71,6 +72,7 @@ public class OfficerController {
             throws ResourceNotFoundException{
         Officer person = officerRepository.findById(personId).orElseThrow(
                 () -> new ResourceNotFoundException("officer " + personId + " not found") );
+        person.clearEventsMade();
         this.officerRepository.delete(person);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);

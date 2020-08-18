@@ -23,7 +23,7 @@ public class Person {
     private String nationalId;
 
     //events he is going to
-    @ManyToMany(cascade = CascadeType.REMOVE )
+    @ManyToMany()
     @JsonIgnore
     @JoinTable(name = "events_person",
             joinColumns = @JoinColumn(name = "person_id"),

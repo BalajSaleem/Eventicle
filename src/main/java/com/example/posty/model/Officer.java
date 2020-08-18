@@ -14,7 +14,7 @@ public class Officer extends Person{
     private String corporation;
 
     //events he has made
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "maker")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "maker")
     @JsonIgnore
     private List<Event> eventsMade = new ArrayList<>();
 
@@ -41,6 +41,12 @@ public class Officer extends Person{
 
     public void setEventsMade(List<Event> eventsMade) {
         this.eventsMade = eventsMade;
+    }
+
+    public void clearEventsMade(){
+        for (Event event: eventsMade) {
+            event.clearParticipants();
+        }
     }
 
 }

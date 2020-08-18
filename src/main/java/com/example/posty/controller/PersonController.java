@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders="*")
 @RequestMapping("/api/v1/")
 public class PersonController {
 
@@ -44,6 +45,18 @@ public class PersonController {
         return ResponseEntity.ok().body(person);
     }
 
+    //getPersonById
+    @GetMapping("/persons/{email}/{pass}")
+    public ResponseEntity<Person> AuthenticatePerson(@PathVariable(value = "email") String email, @PathVariable(value = "pass") String password )
+            throws ResourceNotFoundException {
+        Person person = personRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("person " + email + " not found") );
+        if(person.getPassword().equals(password))
+            return ResponseEntity.ok().body(person);
+        else
+            throw new ResourceNotFoundException("Incorrect password");
+    }
+
     //savePerson
     @PostMapping("persons")
     public Person createPerson(@RequestBody Person person){
@@ -62,7 +75,6 @@ public class PersonController {
         person.setSurname(personDetails.getSurname());
         return ResponseEntity.ok(this.personRepository.save(person));
     }
-
 
     //deletePerson
     @DeleteMapping("persons/{id}")

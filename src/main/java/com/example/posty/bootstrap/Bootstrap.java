@@ -36,6 +36,7 @@ public class Bootstrap implements CommandLineRunner {
         guru.setCorporation("SFG");
         guru.setEmail("guru@guru.com");
         guru.setNationalId("99999567891");
+        guru.setPassword("qwer1234");
         officerRepository.save(guru);
 
         Event sprEvent = new Event();
@@ -75,7 +76,7 @@ public class Bootstrap implements CommandLineRunner {
         emre.setCorporation("Tubitak");
         emre.setEmail("ahmet@ahmet.com");
         emre.setNationalId("88994567891");
-
+        emre.setPassword("qwer1234");
         officerRepository.save(emre);
 
         Event reactEvent = new Event();
@@ -100,6 +101,7 @@ public class Bootstrap implements CommandLineRunner {
         noor.setCorporation("FAST");
         noor.setEmail("noor@noor.com");
         noor.setNationalId("6849567891");
+        noor.setPassword("qwer1234");
         officerRepository.save(noor);
 
 
@@ -109,6 +111,7 @@ public class Bootstrap implements CommandLineRunner {
         ahmed.setSurname("Erkaya");
         ahmed.setEmail("ahmed@ahmed.com");
         ahmed.setNationalId("01234567891");
+        ahmed.setPassword("qwer1234");
         personRepository.save(ahmed);
         ahmed.getEvents().add(sprEvent);
         ahmed.getEvents().add(thymEvent);
@@ -127,6 +130,7 @@ public class Bootstrap implements CommandLineRunner {
         balaj.setSurname("Saleem");
         balaj.setEmail("balaj@balaj.com");
         balaj.setNationalId("01234569999");
+        balaj.setPassword("qwer1234");
         personRepository.save(balaj);
         balaj.getEvents().add(reactEvent);
         personRepository.save(balaj);

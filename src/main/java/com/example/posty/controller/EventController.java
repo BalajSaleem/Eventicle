@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders="*")
 @RequestMapping("/api/v1/")
 public class EventController {
 
@@ -32,7 +33,7 @@ public class EventController {
     public EventController(EventRepository eventRepository, PersonRepository personRepository, OfficerRepository officerRepository) {
         this.eventRepository = eventRepository;
         this.personRepository = personRepository;
-        this.officerRepository = officerRepository;
+         this.officerRepository = officerRepository;
         formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
 
@@ -45,9 +46,28 @@ public class EventController {
     //get the remaining events after todays date
     @GetMapping("eventsRemaining")
     public List<Event> getRemainingEvents(){
-
         return eventRepository.findAll().stream()
                 .filter( x -> LocalDate.parse(x.getStartDate(), formatter ).compareTo(LocalDate.now()) >= 0)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("eventsNotRegistered/{pid}")
+    public List<Event> getUnregisteredEvents(@PathVariable(value = "pid") Long personId) throws ResourceNotFoundException{
+        Person person = personRepository.findById(personId).orElseThrow(
+                () -> new ResourceNotFoundException("person  " + personId + " not found") );
+        return eventRepository.findAll().stream()
+                .filter( x -> !person.getEvents().contains(x))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("eventsNotRegisteredRemaining/{pid}")
+    public List<Event> getUnregisteredRemainingEvents(@PathVariable(value = "pid") Long personId) throws ResourceNotFoundException{
+        Person person = personRepository.findById(personId).orElseThrow(
+                () -> new ResourceNotFoundException("person  " + personId + " not found") );
+        return eventRepository.findAll().stream()
+                .filter( x -> !person.getEvents().contains(x)
+                        && LocalDate.parse(x.getStartDate(), formatter ).compareTo(LocalDate.now()) >= 0
+                        && x.getQuota() >= 0)
                 .collect(Collectors.toList());
     }
 
@@ -88,9 +108,10 @@ public class EventController {
         event.setStartDate(eventDetails.getStartDate());
         event.setEndDate(eventDetails.getEndDate());
         event.setQuota(eventDetails.getQuota());
-
         return ResponseEntity.ok(this.eventRepository.save(event));
     }
+
+
 
     //addEventForPerson
     @PutMapping("eventAddPerson/{id}/{pid}")
@@ -102,6 +123,10 @@ public class EventController {
 
         if(person.equals(event.getMaker()))
             throw new ResourceNotFoundException("cant add participant: person  " + personId + " is the maker of event " + eventId);
+        if(person.getEvents().contains(event))
+            throw new ResourceNotFoundException("cant add participant: person  " + personId + " is the already member event " + eventId);
+        if(event.getQuota() <= 0)
+            throw new ResourceNotFoundException("cant add participant: person  " + personId + " event " + eventId + "is has no remaining quota");
 
         event.getParticipants().add(person);
         person.getEvents().add(event);
@@ -113,7 +138,7 @@ public class EventController {
         return ResponseEntity.ok(this.eventRepository.save(event));
     }
 
-    //addEventForPerson
+    //removeEventForPerson
     @PutMapping("eventRemovePerson/{id}/{pid}")
     public ResponseEntity<Event> removeEventPerson(@PathVariable(value = "id") Long eventId, @PathVariable(value = "pid") Long personId) throws ResourceNotFoundException{
         Event event = eventRepository.findById(eventId).orElseThrow(
