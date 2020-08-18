@@ -1,5 +1,5 @@
 import React from 'react';
-import Map from './Map'
+import Map from '../Location/Map'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -21,7 +21,7 @@ import {
 } from '@material-ui/pickers';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api/v1/'
+    baseURL: 'http://139.179.202.8:8080/api/v1/'
 })
 
 const useStyles = makeStyles((theme) => ({

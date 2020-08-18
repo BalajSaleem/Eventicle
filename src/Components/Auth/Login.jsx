@@ -16,7 +16,7 @@ import axios from 'axios'
 import { useHistory } from "react-router-dom";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1/'
+  baseURL: 'http://139.179.202.8:8080/api/v1/'
 })
 
 function Copyright() {
@@ -54,15 +54,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Login() {
 
-
-
-
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const classes = useStyles();
   const history = useHistory();
 
-
+  //ALL PASSWORDS ARE qwer1234
   const handleLogin = async () => {
     if (email && password && (email.indexOf("@") !== -1)) {
       try {

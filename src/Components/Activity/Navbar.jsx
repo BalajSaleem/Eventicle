@@ -6,16 +6,17 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
-import NewActivityPopup from './NewActivityPopup'
 import { grey } from '@material-ui/core/colors';
 import EventIcon from '@material-ui/icons/Event';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Button from '@material-ui/core/Button';
-import ApplicantBarChart from './ApplicantBarChart'
 import { Grid } from '@material-ui/core';
 import {Link} from "react-router-dom";
+
+import ApplicantBarChart from './ApplicantBarChart'
+import NewActivityPopup from '../Popups/NewActivityPopup'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +71,7 @@ function Navbar(props) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Home
+            Welcome {props.user.name}
           </Typography>
           <TextField className={classes.search} color="secondary" label="Search activity" variant="standard"
             onChange={(e) => props.searchFunc(e.target.value)}

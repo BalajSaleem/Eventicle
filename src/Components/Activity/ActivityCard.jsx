@@ -8,9 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import {red } from '@material-ui/core/colors';
 
-import UpdateActivityPopup from './UpdateActivityPopup';
-import ApplicantsPopup from './ApplicantsPopup'
-import MapPopup from './MapPopup';
+import UpdateActivityPopup from '../Popups/UpdateActivityPopup';
+import ApplicantsPopup from '../Popups/ApplicantsPopup'
+import MapPopup from '../Location/MapPopup';
 
 
 

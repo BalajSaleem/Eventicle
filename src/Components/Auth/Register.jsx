@@ -24,7 +24,7 @@ import { useHistory } from "react-router-dom";
 
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1/'
+  baseURL: 'http://139.179.202.8:8080/api/v1/'
 })
 
 function Copyright() {
