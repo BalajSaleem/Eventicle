@@ -72,6 +72,7 @@ export default function FormDialog({user, addFunction}) {
                 addFunction(data)
             })
             setOpen(false);
+            clearFields();
         }
         else
             alert("please enter valid details for the new activity")
@@ -90,6 +91,13 @@ export default function FormDialog({user, addFunction}) {
     const handleEndDateChange = (date) => {
         setEndDate(date);
     };
+
+    const clearFields = () => {
+        setName('')
+        setDescription('')
+        setQouta(0)
+        setAddress('')
+    }
 
     return (
         <div>

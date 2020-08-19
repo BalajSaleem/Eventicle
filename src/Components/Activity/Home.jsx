@@ -61,13 +61,13 @@ class Home extends Component {
                 console.log('onConnect');
                 if (user.corporation) {
                     this.client.subscribe(`/topic/officer/${user.id}`, message => {
-                        toast(JSON.parse(message.body).content);
+                        toast.info(JSON.parse(message.body).content);
                         this.fetchOfficerEvents();
                     });
                 }
                 else {
-                    this.client.subscribe(`/topic/newEventAnnouncements`, message => {
-                        toast(JSON.parse(message.body).content);
+                    this.client.subscribe(`/topic/eventAnnouncements`, message => {
+                        toast.info(JSON.parse(message.body).content);
                         this.fetchRemainingEventsNotRegistered();
                     });
                 }
@@ -118,10 +118,10 @@ class Home extends Component {
             console.log(data)
             this.setState({ activities: this.state.activities.filter((activity) => activity.id !== eventId) })
             this.client.send(`/app/applyToOfficer/${makerId}/${eventId}/${person.id}`, {})
-            toast('Kudos, you have succesfully applied for this event')
+            toast.success('Kudos, you have succesfully applied for this event')
         }
         catch (err) {
-            toast("Can not apply for the event, you might have already applied")
+            toast.error("Can not apply for the event, you might have already applied")
             console.log(err)
         }
 
@@ -189,12 +189,15 @@ class Home extends Component {
         console.log(`remove the event with id`)
         console.log(eventId)
         //use the delete api call
+        let deletedEvent = this.state.activities.find((activity) => activity.id === eventId)
         this.setState({
             activities: this.state.activities.filter((activity) => {
                 return (activity.id !== eventId)
             })
         })
-        await api.delete(`/events/${eventId}`).then(toast("Event Succesfully Deleted"))
+        await api.delete(`/events/${eventId}`)
+        toast("Event Succesfully Deleted")
+        this.client.send(`/app/announceEventDeletion`, {}, JSON.stringify(deletedEvent))
     }
 
     async addEvent(createdEvent) {
@@ -206,18 +209,21 @@ class Home extends Component {
     }
 
     async updateEvent(updatedEvent) {
+        let oldEvent = this.state.activities.find((activity) => activity.id === updatedEvent.id)
         this.setState({
             activities: this.state.activities.filter((activity) => {
                 return (activity.id !== updatedEvent.id) ? activity : updatedEvent
             })
         })
-        console.log(`event is bieng updated:`)
-        console.log(updatedEvent)
         let data = await api.put(`/events/${updatedEvent.id}`, updatedEvent)
+        this.client.send(`/app/announceEventUpdate`, {}, JSON.stringify(oldEvent))
+        toast("Event Succesfully Updated")
         console.log(data)
     }
 
     render() {
+        // let content = (activities.length === 0) ? <Content applyFunction={this.applyEvent} corporation={this.props.location.state.data.corporation} updateFunction={this.updateEvent} removeFunction={this.removeEvent} query={this.state.search} activities={this.state.activities} />
+        //                                         : <div>No Activities Here</div>
 
         return (
             <div>
