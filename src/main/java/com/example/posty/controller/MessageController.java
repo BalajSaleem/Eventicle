@@ -36,8 +36,24 @@ public class MessageController {
 
     //notify all non-officers that a new event has been made
     @MessageMapping("/announceEventCreation")
-    @SendTo("/topic/newEventAnnouncements")
-    public Message notify( Event event ) throws Exception{
+    @SendTo("/topic/eventAnnouncements")
+    public Message notifyCreation( Event event ) throws Exception{
         return new Message( "New Event! " + event.getMaker().getName() + " " + event.getMaker().getSurname() +  "  has created " + event.getTitle() );
     }
+
+    @MessageMapping("/announceEventDeletion")
+    @SendTo("/topic/eventAnnouncements")
+    public Message notifyDeletion( Event event ) throws Exception{
+        return new Message( "Event Deleted, " +  event.getTitle() + " has been deleted by its proprietor" );
+    }
+
+    @MessageMapping("/announceEventUpdate")
+    @SendTo("/topic/eventAnnouncements")
+    public Message notifyUpdate( Event event ) throws Exception{
+        return new Message( "Event Updated, " +  event.getTitle() + " has been updated, please check new details");
+    }
+
+
+
+
 }
