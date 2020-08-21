@@ -32,6 +32,11 @@ public class Event {
     private Double lng;
     private String address;
 
+
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
+    private List<Question> questions = new ArrayList<>();
+
     //event belonging to the officer
     @ManyToOne
     @JoinColumn(name = "officer_id")
@@ -156,6 +161,14 @@ public class Event {
 
     public void setParticipants(List<Person> participants) {
         this.participants = participants;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
     public void clearParticipants(){

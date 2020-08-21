@@ -3,9 +3,11 @@ package com.example.posty.bootstrap;
 import com.example.posty.model.Event;
 import com.example.posty.model.Officer;
 import com.example.posty.model.Person;
+import com.example.posty.model.Question;
 import com.example.posty.repository.OfficerRepository;
 import com.example.posty.repository.PersonRepository;
 import com.example.posty.repository.EventRepository;
+import com.example.posty.repository.QuestionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +20,14 @@ public class Bootstrap implements CommandLineRunner {
     private final EventRepository eventRepository;
     private final PersonRepository personRepository;
     private final OfficerRepository officerRepository;
+    private final QuestionRepository questionRepository;
 
 
-    public Bootstrap(EventRepository eventRepository, PersonRepository personRepository, OfficerRepository officerRepository) {
+    public Bootstrap(EventRepository eventRepository, PersonRepository personRepository, OfficerRepository officerRepository, QuestionRepository questionRepository) {
         this.eventRepository = eventRepository;
         this.personRepository = personRepository;
         this.officerRepository = officerRepository;
+        this.questionRepository = questionRepository;
     }
 
     @Override
@@ -105,6 +109,10 @@ public class Bootstrap implements CommandLineRunner {
         officerRepository.save(noor);
 
 
+        Question sprQ = new Question();
+        sprQ.setQuestion("Why use spring?");
+
+
         //goes to spring and thym event
         Person ahmed = new Person();
         ahmed.setName("Ahmed");
@@ -112,18 +120,26 @@ public class Bootstrap implements CommandLineRunner {
         ahmed.setEmail("ahmed@ahmed.com");
         ahmed.setNationalId("01234567891");
         ahmed.setPassword("qwer1234");
+        sprQ.setAsker(ahmed);
+        ahmed.getQuestions().add(sprQ);
         personRepository.save(ahmed);
         ahmed.getEvents().add(sprEvent);
         ahmed.getEvents().add(thymEvent);
         personRepository.save(ahmed);
 
         //add ahmed to those events
+        sprEvent.getQuestions().add(sprQ);
+        sprQ.setEvent(sprEvent);
         sprEvent.getParticipants().add(ahmed);
         thymEvent.getParticipants().add(ahmed);
 
         eventRepository.save(sprEvent);
         eventRepository.save(thymEvent);
+        questionRepository.save(sprQ);
 
+
+        Question reactQ = new Question();
+        reactQ.setQuestion("Components vs classes");
         //goes to the react event
         Person balaj = new Person();
         balaj.setName("Balaj");
@@ -131,6 +147,8 @@ public class Bootstrap implements CommandLineRunner {
         balaj.setEmail("balaj@balaj.com");
         balaj.setNationalId("01234569999");
         balaj.setPassword("qwer1234");
+        balaj.getQuestions().add(reactQ);
+        reactQ.setAsker(balaj);
         personRepository.save(balaj);
         balaj.getEvents().add(reactEvent);
         personRepository.save(balaj);
@@ -138,12 +156,32 @@ public class Bootstrap implements CommandLineRunner {
         //add balaj to react event
         reactEvent.getParticipants().add(balaj);
 
-
         guru.getEvents().add(reactEvent);
         reactEvent.getParticipants().add(guru);
-
         eventRepository.save(reactEvent);
         personRepository.save(guru);
+
+        reactQ.setEvent(reactEvent);
+        reactEvent.getQuestions().add(reactQ);
+
+        eventRepository.save(reactEvent);
+        questionRepository.save(reactQ);
+//
+//        Question springQ = new Question("What time?", "", ahmed, sprEvent);
+//        sprEvent.getQuestions().add(springQ);
+//        ahmed.getQuestions().add(springQ);
+//        questionRepository.save(springQ);
+//        eventRepository.save(sprEvent);
+//        personRepository.save(ahmed);
+//
+//        Question thymeQ = new Question("What syllabus?", "", ahmed, thymEvent);
+//        thymEvent.getQuestions().add(thymeQ);
+//        ahmed.getQuestions().add(thymeQ);
+//        questionRepository.save(thymeQ);
+//        eventRepository.save(thymEvent);
+//        personRepository.save(ahmed);
+
+
 
         System.out.println("Initial Data Loaded!");
     }

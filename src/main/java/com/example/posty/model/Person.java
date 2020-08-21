@@ -22,6 +22,10 @@ public class Person {
     private String email;
     private String nationalId;
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "asker")
+    private List<Question> questions = new ArrayList<>();
+
     //events he is going to
     @ManyToMany()
     @JsonIgnore
@@ -96,6 +100,14 @@ public class Person {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
     @Override

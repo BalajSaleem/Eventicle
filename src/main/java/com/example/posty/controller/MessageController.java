@@ -34,6 +34,23 @@ public class MessageController {
         return new Message( "New Applicant! " + person.getName() + " " + person.getSurname() +  "  has applied for " + event.getTitle());
     }
 
+    //notify the specific officer who owns the event
+    @MessageMapping("/askQuestion/{oid}/{eid}/{pid}")
+    @SendTo("/topic/questions/{oid}")
+    public Message askQuestion( @DestinationVariable Long eid, @DestinationVariable Long pid) throws Exception{
+        Event event = eventRepository.findById(eid).orElseThrow(Exception::new);
+        Person person = personRepository.findById(pid).orElseThrow(Exception::new);
+        return new Message( "New Question! " + person.getName() + " " + person.getSurname() +  "  has asked a question for " + event.getTitle());
+    }
+
+    //notify event attendees that question has been answered
+    @MessageMapping("/answerQuestion/{eid}")
+    @SendTo("/topic/eventQuestions/{eid}")
+    public Message answerQuestion( @DestinationVariable Long eid ) throws Exception{
+        Event event = eventRepository.findById(eid).orElseThrow(Exception::new);
+        return new Message( "An answer! For a question in: " + event.getTitle() );
+    }
+
     //notify all non-officers that a new event has been made
     @MessageMapping("/announceEventCreation")
     @SendTo("/topic/eventAnnouncements")
