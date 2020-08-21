@@ -11,6 +11,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import PersonIcon from '@material-ui/icons/Person';
 import { blue } from '@material-ui/core/colors';
+import { Typography } from '@material-ui/core';
+
 
 
 const useStyles = makeStyles({
@@ -27,7 +29,11 @@ function SimpleDialog(props) {
     if (!participants || participants.length === 0) {
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={open} onClose={onClose}>
-                <DialogTitle id="simple-dialog-title">No Applicants Found</DialogTitle>
+                <DialogTitle id="simple-dialog-title">
+                    <Typography variant="h6" color="primary">
+                    No Applicants Found
+                </Typography>
+                </DialogTitle>
             </Dialog>
         );
 
@@ -35,7 +41,11 @@ function SimpleDialog(props) {
     else {
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={open} onClose={onClose}>
-                <DialogTitle id="simple-dialog-title">Applicants</DialogTitle>
+                <DialogTitle id="simple-dialog-title">
+                    <Typography variant="h5" color="primary">
+                    Applicants
+                </Typography>
+                </DialogTitle>
                 <List>
                     {participants.map((participant) => (
                         <ListItem key={participant.id}>
@@ -44,7 +54,7 @@ function SimpleDialog(props) {
                                     <PersonIcon />
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={participant.name + " " + participant.surname}
+                    <ListItemText primary={<Typography variant="h6" color="primary">{participant.name + " " + participant.surname}</Typography>}
                                 secondary={
                                     <div>
                                         <div>National ID: {participant.nationalId}</div>

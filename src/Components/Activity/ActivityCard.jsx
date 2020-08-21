@@ -9,8 +9,9 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import {red } from '@material-ui/core/colors';
 
 import UpdateActivityPopup from '../Popups/UpdateActivityPopup';
-import ApplicantsPopup from '../Popups/ApplicantsPopup'
-import MapPopup from '../Location/MapPopup';
+import ApplicantsPopup from '../Popups/ApplicantsPopup';
+import AnswerPopup from './../Popups/AnswerPopup';
+import MapPopup from './../Location/MapPopup';
 
 
 
@@ -18,14 +19,14 @@ const redTheme = createMuiTheme({ palette: { primary: {main: red[500]} } })
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 200,
+    minWidth: 400,
   },
   title: {
     fontSize: 14,
   },
 });
 
-function ActivityCard({participants, updateFunction, removeFunction, activity}) {
+function ActivityCard({participants, updateFunction, removeFunction, activity, answerQuestion}) {
   const classes = useStyles();
 
   return (
@@ -54,6 +55,7 @@ function ActivityCard({participants, updateFunction, removeFunction, activity}) 
         <MapPopup activity={activity}/>
         <UpdateActivityPopup updateFunction={updateFunction} activityDetails={activity}/>
         <ApplicantsPopup participants = {participants}/>
+        <AnswerPopup activity ={activity} answerQuestion={answerQuestion}/>
         <MuiThemeProvider theme={redTheme}>
         <Button size="small" color="primary" onClick={() => removeFunction(activity.id)}>Delete</Button>
         </MuiThemeProvider>

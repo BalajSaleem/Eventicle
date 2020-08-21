@@ -6,6 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import MapPopup from '../Location/MapPopup';
+import AskPopup from '../Popups/AskPopup';
+
 
 
 const useStyles = makeStyles({
@@ -17,8 +19,19 @@ const useStyles = makeStyles({
   },
 });
 
-function ActivityCard( {applyFunction, activity}) {
+function ActivityCard( {canAsk ,applyFunction, activity, askQuestion}) {
   const classes = useStyles();
+  const cardActions = (canAsk) ? 
+  <CardActions>
+    <Button size="small" color="primary" onClick={() => applyFunction(activity.id)}>Apply</Button>
+    <AskPopup activity= {activity} askQuestion={askQuestion} />
+    <MapPopup activity={activity}/>
+  </CardActions> 
+  :  
+  <CardActions>
+    <Button size="small" color="primary" onClick={() => applyFunction(activity.id)}>Apply</Button>
+    <MapPopup activity={activity}/>
+  </CardActions>
 
   return (
     <Card raised className={classes.root}>
@@ -42,10 +55,7 @@ function ActivityCard( {applyFunction, activity}) {
           {activity.address} 
         </Typography>
       </CardContent>
-      <CardActions>
-      <Button size="small" color="primary" onClick={() => applyFunction(activity.id)}>Apply</Button>
-        <MapPopup activity={activity}/>
-      </CardActions>
+        {cardActions}
     </Card>
   );
 }

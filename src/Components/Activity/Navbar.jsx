@@ -71,7 +71,7 @@ function Navbar(props) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Welcome {props.user.name}
+             {props.title + " - " + props.user.name}
           </Typography>
           <TextField className={classes.search} color="secondary" label="Search activity" variant="standard"
             onChange={(e) => props.searchFunc(e.target.value)}

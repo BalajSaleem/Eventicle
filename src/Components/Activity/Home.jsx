@@ -23,15 +23,20 @@ class Home extends Component {
         let user = this.props.location.state.data
         console.log(user)
         this.setState({ user: this.props.location.state.data })
-
         //establish webscocket connection
         //check if the person is an officer
         if (user.corporation)
-            this.fetchOfficerEvents()
-        else
-            this.fetchRemainingEventsNotRegistered()
-
+        this.fetchOfficerEvents()
+        else{
+            this.fetchRegisteredEvents()
+        }
+        
         this.openWebSocket()
+
+    }
+
+    componentWillUnmount() {
+        this.client.deactivate();
     }
 
     openWebSocket() {
@@ -64,12 +69,17 @@ class Home extends Component {
                         toast.info(JSON.parse(message.body).content);
                         this.fetchOfficerEvents();
                     });
+                    this.client.subscribe(`/topic/questions/${user.id}`, message => {
+                        toast.info(JSON.parse(message.body).content);
+                        this.fetchOfficerEvents();
+                    });
                 }
                 else {
                     this.client.subscribe(`/topic/eventAnnouncements`, message => {
                         toast.info(JSON.parse(message.body).content);
                         this.fetchRemainingEventsNotRegistered();
                     });
+                    this.subscribeToRegisteredEvents()
                 }
 
             },
@@ -82,7 +92,7 @@ class Home extends Component {
         let officerId = this.props.location.state.data.id
         try {
             let data = await api.get(`/officerEvents/${officerId}`).then(({ data }) => data)
-            this.setState({ activities: data })
+            this.setState({ activities: data, navBarTitle: 'Events Created' })
         }
         catch (err) {
             console.log(err.message)
@@ -92,22 +102,24 @@ class Home extends Component {
     fetchEventsRemaining = async () => {
         try {
             let data = await api.get(`/eventsRemaining/`).then(({ data }) => data)
-            this.setState({ activities: data })
+            this.setState({ activities: data , navBarTitle: 'Upcomming Events' })
         }
         catch (err) {
             console.log(err.message)
         }
+        this.setState({canAsk: false})
     }
 
     fetchRemainingEventsNotRegistered = async () => {
         let personId = this.props.location.state.data.id
         try {
             let data = await api.get(`/eventsNotRegisteredRemaining/${personId}`).then(({ data }) => data)
-            this.setState({ activities: data })
+            this.setState({ activities: data , navBarTitle: 'Upcomming Events' })
         }
         catch (err) {
             console.log(err.message)
         }
+        this.setState({canAsk: false})
     }
 
     applyEvent = async (eventId) => {
@@ -118,10 +130,44 @@ class Home extends Component {
             console.log(data)
             this.setState({ activities: this.state.activities.filter((activity) => activity.id !== eventId) })
             this.client.send(`/app/applyToOfficer/${makerId}/${eventId}/${person.id}`, {})
+            this.subscribeToEvent(eventId)
             toast.success('Kudos, you have succesfully applied for this event')
         }
         catch (err) {
             toast.error("Can not apply for the event, you might have already applied")
+            console.log(err)
+        }
+
+    }
+
+    askQuestion = async (question, activity) => {
+        let person = this.props.location.state.data
+        try{
+            let data = await api.post(`askQuestion/${activity.id}/${person.id}`, question, {headers: {"Content-Type": "text/plain"}})
+            console.log(data)
+            this.client.send(`/app/askQuestion/${activity.maker.id}/${activity.id}/${person.id}`, {})
+            toast.success('Question successfully posted')
+            this.fetchRegisteredEvents()
+        }
+        catch(err){
+            toast.error("Oops, could not post question.")
+            console.log(err)
+        }
+
+    }
+
+    answerQuestion = async (activity, question, answer) => {
+
+        try{
+            let person = this.props.location.state.data
+            let data = await api.put(`answerQuestion/${question.id}/${person.id}`, answer, {headers: {"Content-Type": "text/plain"}})
+            console.log(data)
+            this.client.send(`/app/answerQuestion/${activity.id}`, {})
+            toast.success('Question successfully answered')
+            this.fetchOfficerEvents()
+        }
+        catch(err){
+            toast.error("Oops, could not answer question.")
             console.log(err)
         }
 
@@ -135,6 +181,7 @@ class Home extends Component {
         catch (err) {
             console.log(err.message)
         }
+        this.setState({canAsk: false, navBarTitle: 'All Events'})
     }
 
     fetchRegisteredEvents = async () => {
@@ -142,6 +189,18 @@ class Home extends Component {
         try {
             let data = await api.get(`/personEvents/${personId}`).then(({ data }) => data)
             this.setState({ activities: data })
+        }
+        catch (err) {
+            console.log(err.message)
+        }
+        this.setState({canAsk: true, navBarTitle: 'Events Registered'})
+    }
+
+    subscribeToRegisteredEvents = async () =>{
+        let personId = this.props.location.state.data.id
+        try {
+            let data = await api.get(`/personEvents/${personId}`).then(({ data }) => data)
+            data.forEach(activity => this.subscribeToEvent(activity.id))
         }
         catch (err) {
             console.log(err.message)
@@ -168,6 +227,8 @@ class Home extends Component {
                     ]
                 },
             ],
+            canAsk: true,
+            navBarTitle: 'Registered Events',
             user: {},
             sock: {},
             stompClient: {},
@@ -183,6 +244,14 @@ class Home extends Component {
             search: val
         })
         console.log("searching");
+    }
+
+    subscribeToEvent(eventId){
+        console.log(`--subscribing to ${eventId}`)
+        this.client.subscribe(`/topic/eventQuestions/${eventId}`, message => {
+            toast.info(JSON.parse(message.body).content);
+            this.fetchRegisteredEvents();
+        });
     }
 
     removeEvent = async (eventId) => {
@@ -229,17 +298,19 @@ class Home extends Component {
             <div>
                 <Grid container direction="column">
                     <Grid item>
-                        <Navbar user={this.props.location.state.data} activities={this.state.activities}
+                        <Navbar title={this.state.navBarTitle} user={this.props.location.state.data} activities={this.state.activities}
                             addFunction={this.addEvent} searchFunc={this.getSearch} fetchAllEvents={this.fetchEvents}
                             fetchRegisteredEvents={this.fetchRegisteredEvents} fetchRemainingEvents={this.fetchRemainingEventsNotRegistered} />
                     </Grid>
                     <Grid item container>
-                        <Grid item xs={2}></Grid>
-                        <Grid item xs={8}>
+                        <Grid item xs={1}></Grid>
+                        <Grid item xs={10}>
                             <Box m={2} />
-                            <Content applyFunction={this.applyEvent} corporation={this.props.location.state.data.corporation} updateFunction={this.updateEvent} removeFunction={this.removeEvent} query={this.state.search} activities={this.state.activities} />
+                            <Content canAsk={this.state.canAsk} applyFunction={this.applyEvent} 
+                            corporation={this.props.location.state.data.corporation} updateFunction={this.updateEvent} removeFunction={this.removeEvent} 
+                            query={this.state.search} activities={this.state.activities} askQuestion={this.askQuestion} answerQuestion={this.answerQuestion} />
                         </Grid>
-                        <Grid item xs={2}></Grid>
+                        <Grid item xs={1}></Grid>
                     </Grid>
                 </Grid>
                 <ToastContainer position="top-right" autoClose={4000}/>
