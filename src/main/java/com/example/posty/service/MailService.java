@@ -2,35 +2,53 @@ package com.example.posty.service;
 
 import com.example.posty.model.Event;
 import com.example.posty.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
 
 @Service
 public class MailService {
 
-    @Autowired
-    private JavaMailSender emailSender;
+    private final JavaMailSender emailSender;
+    private final QrService qrService;
 
-    public void sendmail(Event event, Person person) throws IOException, MessagingException {
+    public MailService(JavaMailSender emailSender, QrService qrService) {
+        this.emailSender = emailSender;
+        this.qrService = qrService;
+    }
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(person.getEmail());
-        message.setSubject("Registered for " + event.getTitle());
-        message.setText( "Congratulations! you have successfully signed up for " + event.getTitle() +
+    public void sendmail(Event event, Person person) throws Exception {
+
+        MimeMessage message = emailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(person.getEmail());
+        helper.setSubject("Registered for " + event.getTitle());
+        helper.setText( "Dear Mr / Ms "  + person.getSurname() + "\n \nCongratulations! you have successfully signed up for " + event.getTitle() +
                 " we are looking forward to seeing you at the event on " + event.getStartDate() +
-               "\n here is how the event maker described the event: " + event.getDescription()
-                + "\n. We wish you a pleasant experience at the event. \n \n Sincerely, \n Folks at Eventicle"  );
+               "\nHere is how the event maker described the event: " + event.getDescription() +
+                "\nKindly find the QR Code for your registration for this event attached along this email, you may be required to present this on entry"
+                + "\nWe wish you a pleasant experience at the event. \n \nSincerely, \nFolks at Eventicle"  );
+
+
+        BufferedImage qrCode = qrService.generateQRCodeImage(
+                person.getName() + " " + person.getSurname() + " of ID " + person.getId() + " is registered for: \n " + event.getTitle() + " \n ID: "  + event.getId() + "\n from: " + event.getStartDate() + " \n till:  " + event.getEndDate() + " \n at: " + event.getAddress()
+        );
+
+        File qrFile = new File("QrCode.jpg");
+        ImageIO.write(qrCode, "jpg", qrFile);
+
+        helper.addAttachment("QrCode.jpg", qrFile);
+
+
         emailSender.send(message);
     }
 }

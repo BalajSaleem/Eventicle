@@ -132,7 +132,7 @@ public class EventController {
             if(event.getQuota() <= 0)
                 throw new ResourceNotFoundException("cant add participant: person  " + personId + " event " + eventId + "is has no remaining quota");
 
-        try{
+//        try{
             event.getParticipants().add(person);
             person.getEvents().add(event);
 
@@ -140,12 +140,25 @@ public class EventController {
             event.setQuota(event.getQuota() - 1);
             personRepository.save(person);
             return ResponseEntity.ok(this.eventRepository.save(event));
-        }
-        finally {
-            mailService.sendmail(event, person);
-        }
+//        }
+//        finally {
+//            mailService.sendmail(event, person);
+//        }
+    }
 
+    //addEventForPerson
+    @PutMapping("sendPersonEmail/{id}/{pid}")
+    public Map<String,Boolean> sendPersonEmail(@PathVariable(value = "id") Long eventId, @PathVariable(value = "pid") Long personId) throws Exception {
 
+        Event event = eventRepository.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("event  " + eventId + " not found") );
+        Person person = personRepository.findById(personId).orElseThrow(
+                () -> new ResourceNotFoundException("person  " + personId + " not found") );
+
+        mailService.sendmail(event, person);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("email", Boolean.TRUE);
+        return response;
     }
 
     //removeEventForPerson
