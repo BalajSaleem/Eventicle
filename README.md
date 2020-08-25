@@ -26,6 +26,7 @@ There is also a mobile application for it developed using Flutter, which can be 
 
 -Get notified whenever a new event is created, updated or deleted, or when a question is answered in one of their events.
 
+-Get email notification regarding the event you have applied for along with a QR Code containing event details.
 
 ### Functionality for officers
 -Create an event.
