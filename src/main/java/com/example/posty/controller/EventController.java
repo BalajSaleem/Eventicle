@@ -1,5 +1,6 @@
 package com.example.posty.controller;
 
+import com.example.posty.service.MailService;
 import com.example.posty.exception.ResourceNotFoundException;
 import com.example.posty.model.Event;
 import com.example.posty.model.Officer;
@@ -8,13 +9,13 @@ import com.example.posty.repository.EventRepository;
 import com.example.posty.repository.OfficerRepository;
 import com.example.posty.repository.PersonRepository;
 import com.sun.istack.NotNull;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,13 @@ public class EventController {
     private final PersonRepository personRepository;
     private final OfficerRepository officerRepository;
     private final DateTimeFormatter formatter;
+    private final MailService mailService;
 
-    public EventController(EventRepository eventRepository, PersonRepository personRepository, OfficerRepository officerRepository) {
+    public EventController(EventRepository eventRepository, PersonRepository personRepository, OfficerRepository officerRepository, MailService mailService) {
         this.eventRepository = eventRepository;
         this.personRepository = personRepository;
          this.officerRepository = officerRepository;
+        this.mailService = mailService;
         formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
 
@@ -115,27 +118,34 @@ public class EventController {
 
     //addEventForPerson
     @PutMapping("eventAddPerson/{id}/{pid}")
-    public ResponseEntity<Event> addEventPerson(@PathVariable(value = "id") Long eventId, @PathVariable(value = "pid") Long personId) throws ResourceNotFoundException{
-        Event event = eventRepository.findById(eventId).orElseThrow(
-                () -> new ResourceNotFoundException("event  " + eventId + " not found") );
-        Person person = personRepository.findById(personId).orElseThrow(
-                () -> new ResourceNotFoundException("person  " + personId + " not found") );
+    public ResponseEntity<Event> addEventPerson(@PathVariable(value = "id") Long eventId, @PathVariable(value = "pid") Long personId) throws ResourceNotFoundException, IOException, MessagingException {
 
-        if(person.equals(event.getMaker()))
-            throw new ResourceNotFoundException("cant add participant: person  " + personId + " is the maker of event " + eventId);
-        if(person.getEvents().contains(event))
-            throw new ResourceNotFoundException("cant add participant: person  " + personId + " is the already member event " + eventId);
-        if(event.getQuota() <= 0)
-            throw new ResourceNotFoundException("cant add participant: person  " + personId + " event " + eventId + "is has no remaining quota");
+            Event event = eventRepository.findById(eventId).orElseThrow(
+                    () -> new ResourceNotFoundException("event  " + eventId + " not found") );
+            Person person = personRepository.findById(personId).orElseThrow(
+                    () -> new ResourceNotFoundException("person  " + personId + " not found") );
 
-        event.getParticipants().add(person);
-        person.getEvents().add(event);
+            if(person.equals(event.getMaker()))
+                throw new ResourceNotFoundException("cant add participant: person  " + personId + " is the maker of event " + eventId);
+            if(person.getEvents().contains(event))
+                throw new ResourceNotFoundException("cant add participant: person  " + personId + " is the already member event " + eventId);
+            if(event.getQuota() <= 0)
+                throw new ResourceNotFoundException("cant add participant: person  " + personId + " event " + eventId + "is has no remaining quota");
 
-        //reduce qouta
-        event.setQuota(event.getQuota() - 1);
+        try{
+            event.getParticipants().add(person);
+            person.getEvents().add(event);
 
-        personRepository.save(person);
-        return ResponseEntity.ok(this.eventRepository.save(event));
+            //reduce qouta
+            event.setQuota(event.getQuota() - 1);
+            personRepository.save(person);
+            return ResponseEntity.ok(this.eventRepository.save(event));
+        }
+        finally {
+            mailService.sendmail(event, person);
+        }
+
+
     }
 
     //removeEventForPerson

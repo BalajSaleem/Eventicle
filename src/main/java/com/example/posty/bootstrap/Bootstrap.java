@@ -144,7 +144,7 @@ public class Bootstrap implements CommandLineRunner {
         Person balaj = new Person();
         balaj.setName("Balaj");
         balaj.setSurname("Saleem");
-        balaj.setEmail("balaj@balaj.com");
+        balaj.setEmail("balajsaleem@live.com");
         balaj.setNationalId("01234569999");
         balaj.setPassword("qwer1234");
         balaj.getQuestions().add(reactQ);
