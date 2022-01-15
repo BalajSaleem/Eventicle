@@ -12,8 +12,9 @@ Navigate into these branches to run the backend and the frontend independently a
 
 There is also a mobile application for it developed using Flutter, which can be found [here](https://github.com/BalajSaleem/Eventicle-Flutter-App).
 
+## Functionality
 
-### Functionality for attendees
+#### For Attendees
 -View all events.
 
 -VIew unregistered / registered events
@@ -28,7 +29,7 @@ There is also a mobile application for it developed using Flutter, which can be 
 
 -Get email notification regarding the event you have applied for along with a QR Code containing event details.
 
-### Functionality for officers
+####  For officers
 -Create an event.
 
 -VIew created events
@@ -44,4 +45,7 @@ There is also a mobile application for it developed using Flutter, which can be 
 -View Location of an event
 
 -Get notified whenever of their created events gets an applicant, or a question is asked.
+
+
+### Screenshots
 
