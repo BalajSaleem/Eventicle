@@ -48,16 +48,16 @@ There is also a mobile application for it developed using Flutter, which can be 
 
 
 ### Screenshots
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/1.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/2.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/3.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/4.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/5.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/6.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/7.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/8.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/9.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/10.png?raw=true)
-![alt text](https://github.com/balajSaleem/Eventicle/blob/master/11.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/1.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/2.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/3.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/4.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/5.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/6.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/7.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/8.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/9.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/10.png?raw=true)
+![alt text](https://github.com/BalajSaleem/Eventicle/blob/master/11.png?raw=true)
 
 
